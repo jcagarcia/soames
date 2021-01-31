@@ -1,5 +1,11 @@
 FROM ruby:2.7.2-alpine3.12 as base
 
+RUN apk update \
+ && apk add --no-cache  \
+ && apk add openjdk8  \
+    build-base  \
+    ruby-dev
+
 ENV APP /opt
 WORKDIR $APP
 

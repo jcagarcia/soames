@@ -39,7 +39,7 @@ RSpec.describe Soames::Configurable do
 
   describe '.default_configuration' do
     it 'default detectors are set' do
-      expect(a_class.default_configuration.detectors).to include(an_instance_of(Soames::Detectors::LocalFolderDetector))
+      expect(a_class.default_configuration.detectors).to include(an_instance_of(Soames::Detectors::FilesDetector))
     end
   end
 end

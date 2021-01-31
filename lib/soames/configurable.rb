@@ -1,10 +1,10 @@
-require_relative 'detectors/local_folder_detector'
+require_relative 'detectors/files_detector'
 
 module Soames
   module Configurable
     attr_reader :configuration
 
-    DEFAULT_DETECTORS = [ Detectors::LocalFolderDetector ].freeze
+    DEFAULT_DETECTORS = [ Detectors::FilesDetector ].freeze
 
     class Configuration
       attr_accessor :detectors

@@ -32,6 +32,7 @@ RSpec.describe Soames::Client do
     it 'returns a model with the result of the fraud analysis including specific information of each detector' do
       result = a_client.check_fraud('wadus')
 
+      expect(result.fraud?).to be true
       expect(result.fraud_level).to eq(93.35)
       expect(result.original_text).to eq('wadus')
       expect(result.detector_results.size).to eq(2)

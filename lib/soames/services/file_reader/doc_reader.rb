@@ -1,8 +1,10 @@
+require_relative 'parsers/yomu_parser'
+
 module Soames
   module Services
     class FileReader
       class DocReader
-        READER_EXTENSION = '.doc'
+        READER_EXTENSION = '.doc'.freeze
 
         class << self
           def applies?(extension)
@@ -10,7 +12,11 @@ module Soames
           end
 
           def read_from(path)
-            # TODO
+            Parsers::YomuParser.text_from(path)
+          rescue
+            Soames.logger.error "Error reading the #{READER_EXTENSION} file"
+
+            raise "Error reading the #{READER_EXTENSION} file."
           end
         end
       end

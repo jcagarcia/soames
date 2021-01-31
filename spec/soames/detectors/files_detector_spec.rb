@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'soames/detectors/local_folder_detector'
+require 'soames/detectors/files_detector'
 require 'soames/services/fraud_checker'
 
-RSpec.describe Soames::Detectors::LocalFolderDetector do
+RSpec.describe Soames::Detectors::FilesDetector do
   let(:local_files_folder) do
     "#{File.dirname(__FILE__)}/../../utils/local_files/txt_files"
   end
@@ -11,7 +11,7 @@ RSpec.describe Soames::Detectors::LocalFolderDetector do
     it 'return a new instance with the default configuration' do
       result = described_class.build_default
 
-      expect(result).to be_a Soames::Detectors::LocalFolderDetector
+      expect(result).to be_a Soames::Detectors::FilesDetector
       expect(result.folder).to eq('/root')
     end
   end

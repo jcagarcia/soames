@@ -2,7 +2,7 @@ module Soames
   module Services
     class FileReader
       class TxtReader
-        READER_EXTENSION = '.txt'
+        READER_EXTENSION = '.txt'.freeze
 
         class << self
           def applies?(extension)
