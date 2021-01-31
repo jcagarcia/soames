@@ -3,18 +3,20 @@ module Soames
     class FraudChecker
       class << self
         def analyze(one, other)
-          longer_text = [one.size, other.size].max
-          result = levenshtein(one, other)
+          result = Result.new
+          candidates_one = one.split('.')
+          candidates_other = other.split('.')
 
-          fraud_level = (100 - ((result.to_f * 100) / longer_text.to_f)).truncate(2).to_f 
+          candidates_one.each do |candidate_one|
+            candidates_other.each do |candidate_other|
+              max_size = [candidate_one.size, candidate_other.size].max
+              distance = levenshtein(candidate_one, candidate_other)
+              fraud_level = (100 - ((distance.to_f * 100) / max_size.to_f)).truncate(2).to_f
+              result.add_candidate(text: candidate_one, fraud_level: fraud_level)
+            end
+          end
 
-          puts "LONGER TEXT #{longer_text}"
-          puts "RESULT #{result}"
-          puts "FRAUD LEVEL #{fraud_level}"
-
-          return Result.new(fraud: true, fraud_level: fraud_level) if fraud_level > 60.0
-
-          Result.new(fraud: false, fraud_level: fraud_level)
+          result
         end
 
         private
@@ -42,15 +44,41 @@ module Soames
       end
 
       class Result
-        attr_reader :fraud_level
+        attr_reader :candidates
 
-        def initialize(fraud: false, fraud_level: 0.0)
-          @fraud = fraud
-          @fraud_level = fraud_level
+        def initialize(candidates: [])
+          @candidates = candidates
+        end
+
+        def add_candidate(text:, fraud_level:)
+          @candidates << Candidate.new(text: text, fraud_level: fraud_level)
         end
 
         def fraud?
-          @fraud
+          return false unless matches.any?
+
+          true
+        end
+
+        def fraud_level
+          return 0.0 unless matches.any?
+
+          (matches.map(&:fraud_level).inject{ |sum, el| sum + el }.to_f / matches.size).truncate(2).to_f
+        end
+
+        def matches
+          @candidates.select do |candidate|
+            candidate.fraud_level > 50
+          end
+        end
+
+        class Candidate
+          attr_reader :text, :fraud_level
+
+          def initialize(text:, fraud_level:)
+            @text = text
+            @fraud_level = fraud_level
+          end
         end
       end
     end
