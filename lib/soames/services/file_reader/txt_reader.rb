@@ -11,6 +11,9 @@ module Soames
 
           def read_from(path)
             File.open(path).read
+          rescue => e
+            Soames.logger.error 'Error reading the .txt file'
+            raise "Error reading the .txt file. Error => #{e.message}"
           end
         end
       end
